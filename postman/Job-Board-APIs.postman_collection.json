@@ -1,0 +1,731 @@
+{
+  "info": {
+    "name": "TalentStream API",
+    "description": "Complete API collection for Job Board platform with Authentication, Job Management, and User Preferences",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "employerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Register EMPLOYER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.environment.set(\"employerToken\", pm.response.json().token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"tech_hr\",\n  \"email\": \"hr@techcorp.com\",\n  \"password\": \"password123\",\n  \"fullName\": \"Tech Corp HR\",\n  \"role\": \"EMPLOYER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register USER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.environment.set(\"userToken\", pm.response.json().token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_seeker\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"fullName\": \"John Seeker\",\n  \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login EMPLOYER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.environment.set(\"employerToken\", pm.response.json().token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"tech_hr\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login USER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.environment.set(\"userToken\", pm.response.json().token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_seeker\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Job Management",
+      "item": [
+        {
+          "name": "Create Job (EMPLOYER)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Senior Java Developer\",\n  \"description\": \"We are looking for an experienced Java developer with strong Spring Boot knowledge. The ideal candidate will have 5+ years of experience in backend development and microservices architecture.\",\n  \"companyName\": \"Tech Corp\",\n  \"location\": \"Bangalore, India\",\n  \"jobType\": \"FULL_TIME\",\n  \"category\": \"SOFTWARE_DEVELOPMENT\",\n  \"experienceLevel\": \"SENIOR\",\n  \"salaryMin\": 1500000,\n  \"salaryMax\": 2500000,\n  \"skillsRequired\": \"Java, Spring Boot, Microservices, PostgreSQL, Docker, Kubernetes\",\n  \"applicationDeadline\": \"2025-12-31T23:59:59\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs"]
+            }
+          }
+        },
+        {
+          "name": "Get All Jobs (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs?page=0&size=10&sortBy=createdAt&sortDir=DESC",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortDir",
+                  "value": "DESC"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Job by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "1"]
+            }
+          }
+        },
+        {
+          "name": "Search Jobs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/search?keyword=java&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "search"],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "java"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/category/SOFTWARE_DEVELOPMENT?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "category", "SOFTWARE_DEVELOPMENT"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by Job Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/type/FULL_TIME?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "type", "FULL_TIME"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by Salary Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/salary-range?minSalary=1000000&maxSalary=2000000&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "salary-range"],
+              "query": [
+                {
+                  "key": "minSalary",
+                  "value": "1000000"
+                },
+                {
+                  "key": "maxSalary",
+                  "value": "2000000"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get My Jobs (EMPLOYER)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/my-jobs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "my-jobs"]
+            }
+          }
+        },
+        {
+          "name": "Update Job (EMPLOYER)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Senior Java Developer - UPDATED\",\n  \"description\": \"Updated job description with more details...\",\n  \"companyName\": \"Tech Corp\",\n  \"location\": \"Bangalore/Remote\",\n  \"jobType\": \"FULL_TIME\",\n  \"category\": \"SOFTWARE_DEVELOPMENT\",\n  \"experienceLevel\": \"SENIOR\",\n  \"salaryMin\": 1800000,\n  \"salaryMax\": 2800000,\n  \"skillsRequired\": \"Java, Spring Boot, Microservices, PostgreSQL, Docker, Kubernetes, AWS\",\n  \"applicationDeadline\": \"2025-12-31T23:59:59\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Job (EMPLOYER)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Job Applications",
+      "item": [
+        {
+          "name": "Apply for Job (USER)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"coverLetter\": \"I am very interested in this position. I have 6 years of experience in Java development with extensive knowledge of Spring Boot and microservices. I have worked on multiple large-scale projects and I believe I would be a great fit for this role.\",\n  \"resumeUrl\": \"https://example.com/resume/john_doe.pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/1/apply",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "1", "apply"]
+            }
+          }
+        },
+        {
+          "name": "Get Applications for Job (EMPLOYER)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/1/applications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "1", "applications"]
+            }
+          }
+        },
+        {
+          "name": "Get My Applications (USER)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/applications/my-applications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "applications", "my-applications"]
+            }
+          }
+        },
+        {
+          "name": "Update Status to SHORTLISTED",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/applications/1/status?status=SHORTLISTED",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "applications", "1", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "SHORTLISTED"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Status to INTERVIEWED",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/applications/1/status?status=INTERVIEWED",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "applications", "1", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "INTERVIEWED"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Status to ACCEPTED",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/applications/1/status?status=ACCEPTED",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "applications", "1", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "ACCEPTED"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Status to REJECTED",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/applications/1/status?status=REJECTED",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "applications", "1", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "REJECTED"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Withdraw Application (USER)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/1/applications/withdraw",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "1", "applications", "withdraw"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Preferences",
+      "item": [
+        {
+          "name": "Subscribe to Categories",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscribedCategories\": [\"SOFTWARE_DEVELOPMENT\", \"DATA_SCIENCE\"],\n  \"emailNotificationsEnabled\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/preferences",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "preferences"]
+            }
+          }
+        },
+        {
+          "name": "Get My Preferences",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/preferences",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "preferences"]
+            }
+          }
+        },
+        {
+          "name": "Disable Notifications",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscribedCategories\": [\"SOFTWARE_DEVELOPMENT\"],\n  \"emailNotificationsEnabled\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/preferences",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "preferences"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Checks",
+      "item": [
+        {
+          "name": "Eureka Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8761",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8761"
+            }
+          }
+        },
+        {
+          "name": "API Gateway Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health"]
+            }
+          }
+        },
+        {
+          "name": "Auth Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/actuator/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["actuator", "health"]
+            }
+          }
+        },
+        {
+          "name": "Job Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/actuator/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["actuator", "health"]
+            }
+          }
+        },
+        {
+          "name": "RabbitMQ Management",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:15672",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "15672"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

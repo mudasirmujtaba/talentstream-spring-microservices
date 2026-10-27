@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: notification-service
+
+  # RabbitMQ Configuration
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  # Mail Configuration (Gmail example - we'll use fake SMTP for testing)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}  # Supply via environment variable
+    password: ${MAIL_PASSWORD:}  # Supply via environment variable (e.g. Gmail App Password)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+# Disable mail health check to prevent failures
+management:
+  health:
+    mail:
+      enabled: false
+
+server:
+  port: 8083
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+# Logging
+logging:
+  level:
+    com.jobboard.notifications: DEBUG
+    org.springframework.amqp: DEBUG
